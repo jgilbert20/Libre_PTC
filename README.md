@@ -4,13 +4,13 @@ Ever wanted to add intuitive capacitive touch user interfaces to your hobby-grad
 
 LibrePTC is an Arduino-IDE compatible code library that provides first-ever open-source access to Atmel's latest-generation "Peripheral Touch Controller" (PTC). The PTC is a hardware-based capacitive sensor that can detect proximity of your fingers to special "pads" or areas of your circuit board. This lets you implement things like buttons, wheels and sliders without any actual moveable hardware or external components. 
 
+The basic idea, (taken from the AN0040 datasheet.)
+
 ![What is this](images/AN0040-diagram.png)
 
-[picture]
+Self-capacitive sensing is amazing - you actually don't need any external components at all -- not even a resistor! In fact, the folks at Adafruit have even used such a thing to turn fruit into a user interface. Here is a screen shot from [@ladyada's wonderful Youtube explanation of touch sensing.](https://www.youtube.com/watch?v=Wk76UPRAVxI)
 
-Self-capacitive sensing is amazing - you actually don't need any external components at all -- not even a resistor! In fact, the folks at Adafruit have even used such a thing to turn fruit into a user interface. 
-
-[picture]
+![What is this](images/fruitcap-adafruit.jpg)
 
 Until now, the PTC has been closed source and is undocumented, meaning you have to use Atmel's proprietary libraries[link], if you want to access the hardware on your Arduino-compatable processors. 
 
@@ -32,7 +32,7 @@ LibrePTC is not aiming to recreate QTouch. That would be mostly pointless. If yo
 
 # LibrePTC - the good news and the bad news
 
-LibrePTC is a based on an excruciating process of reverse engineering the PTC control registers using a JTAG debugger. Atmel does not publish anything about the PTC hardware design other than a simple block diagram, and the control registers are actually missing from the CMSIS definition files for the SAMD21/11. CMSIS is normally where a hardware manufacturer gives names and locations to all of the special memory-mapped IO on their chips. Therefore, everything in LibrePTC had to be discovered with ARM-code step debugging, repeated observation, and empirical testing. This reverse engineering was also aided by familiarity with the ATSAMD architecture's other peripherals which share many of the same design patterns.
+LibrePTC was based on an excruciating process of reverse engineering the PTC control registers using a JTAG debugger. Atmel does not publish anything about the PTC hardware design other than a simple block diagram, and the control registers are actually missing from the CMSIS definition files for the SAMD21/11. CMSIS is normally where a hardware manufacturer gives names and locations to all of the special memory-mapped IO on their chips. Therefore, everything in LibrePTC had to be discovered with ARM-code step debugging, repeated observation, and empirical testing. This reverse engineering was also aided by familiarity with the ATSAMD architecture's other peripherals which share many of the same design patterns.
 
 For the user, there are two practical upshots to the fact that LibrePTC was reverse engineered. The good news is that the library and documentation is now free and open to the world, and perhaps one day will even find its way into the ArduinoCore. You can drop LibrePTC into your projects like you would any other Arduino library. You'll get a nice little API with lots of settings you can play with, and beautiful stable capacitive reads from your fingers (or fruit!). You select a sensor to read and get back a nice tidy 16-bit integer just like you were reading a analog-to-digital converter. That is the good part.
 
@@ -62,7 +62,7 @@ Please fork and contribute!
 
 # Using LibrePTC in your projects
 
-
+[To be completed]
 
 
 # Key resources
@@ -75,16 +75,11 @@ Atmel QTouch Library User Guide (8207L-AT42-05/12) - Older document describing Q
 
 QTouch atmel-42195-qtouch-library-peripheral-touch-controller_user-guide - The full user guide to the latest QTouch controller
 
-QMatrix - An open source attempt to re
-
-
 # Library details
 
 What follows is a bit of a brain-dump on what I know about the PTC and capacitive sensing in general to serve as a guide for future users.
 
 Capacitive touch sensing relies on the idea that your fingers affect electrical fields around them because they are partial conductors. "Capacitive" is fancy engineering term for the idea of being able to "hold" a charge, meaning that if you put a small amount of energy into something it will be held and can later be released. Any pad, wire or conductor has some level of capacitance, including the wires in your project. When you make a capacitive sensor pad as a bit of copper, you're effectively making a capacitor.
-
-[adafruit picture]
 
 When your finger approaches and gets near a capacitive sensing pad, it effectively alters the capacitance of the sensor pad because the "capacitor" is now a combination of the existing pad plus whatever your finger has.
 
@@ -114,7 +109,9 @@ On page 13 and 14 of the SAMD11 data sheet, (page 21,22 of the SAMD21), you get 
 
 Look in the PTC column on the far right and you can see if the GPIO pin can handle either being a X line or a Y line or maybe even both.
 
-[picture]
+![](samd11-pinouts-1.png)
+
+![](samd11-pinouts-2.png)
 
 This chart is vital for setting up a project using either QTouch or LibrePTC libraries. To read a sensor, you must provide the library a "Y" channel to read. Be careful! Some pins may already  be in use for things like your clock or I2C. For instance, PA22 and PA23 on the D11 chips can be used as PTC lines Y12 and Y13. But those two pins are assigned by the ArduinoCore to SDA and SCL already and in fact are only one of the two possible pairs of pins that can be mapped to the I2C hardware.
 
