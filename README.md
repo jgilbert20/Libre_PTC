@@ -28,7 +28,7 @@ The other major drawback of QTouch is code size. For simple needs, the Atmel QTo
 
 Of course, the QTouch library has many advantages. Aside from giving you access to the silicon, it also post-processes the output in many clever (and necessary) ways. In fact, most of the QTouch value-add is probably in this post-processing step which is why I'm sure Atmel decided to close source it. QTouch appears to be exceptionally robust. You can configure all sorts of things like moisture rejection, self-calibration, adjacent key rejection, etc. The penalty is a bizarre API and the code size.
 
-LibrePTC is not aiming to recreate QTouch. That would be mostly pointless. If you need all of those special QTouch features, you should use QTouch. But if you just want a simple way to read capacitance and you don't want the encumberance of the QTouch library, you might want to consider LibrePTC. 
+LibrePTC is not aiming to recreate QTouch. That would be mostly pointless. If you need all of those special QTouch features, you should use QTouch. But if you just want a simple way to read capacitance and you don't want the encumbrance of the QTouch library, you might want to consider LibrePTC. 
 
 # LibrePTC - the good news and the bad news
 
@@ -109,9 +109,9 @@ On page 13 and 14 of the SAMD11 data sheet, (page 21,22 of the SAMD21), you get 
 
 Look in the PTC column on the far right and you can see if the GPIO pin can handle either being a X line or a Y line or maybe even both.
 
-![](samd11-pinouts-1.png)
+![](images/samd11-pinouts-1.png)
 
-![](samd11-pinouts-2.png)
+![](images/samd11-pinouts-2.png)
 
 This chart is vital for setting up a project using either QTouch or LibrePTC libraries. To read a sensor, you must provide the library a "Y" channel to read. Be careful! Some pins may already  be in use for things like your clock or I2C. For instance, PA22 and PA23 on the D11 chips can be used as PTC lines Y12 and Y13. But those two pins are assigned by the ArduinoCore to SDA and SCL already and in fact are only one of the two possible pairs of pins that can be mapped to the I2C hardware.
 
