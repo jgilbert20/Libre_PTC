@@ -99,7 +99,7 @@ In the case of touch measurement, the "capacitor" is charged by repeatedly raisi
 
 If you look at the design of the PTC from page 18 of the 42195 design guide, you see this basic structure.
 
-[](images/42195-page18.png)
+![](images/42195-page18.png)
 
 In this chart, presumably the "input control" is the switch that either charges the capacitive sensing pad or routes the charge to the discharge resistor. Atmel doesn't show it explicitly but I think you can adjust the discharge resistor R(s) value, affecting the measurement. Atmel also has a compensation circuit that is basically a black box but seems to involve additional capacitors. There are hardware registers that I believe are involved in this compensation circuit.
 
