@@ -1,5 +1,8 @@
 # LibrePTC
 
+**Current status**: It works on the SAMD11 architecture, but still cleaning things up to make it a "proper" API.
+
+# Introduction
 Ever wanted to add intuitive capacitive touch user interfaces to your hobby-grade Arduino project but frustrated by the lack of available libraries?  
 
 LibrePTC is an Arduino-IDE compatible code library that provides first-ever open-source access to Atmel's latest-generation "Peripheral Touch Controller" (PTC). The PTC is a hardware-based capacitive sensor that can detect proximity of your fingers to special "pads" or areas of your circuit board. This lets you implement things like buttons, wheels and sliders without any actual moveable hardware or external components. 
@@ -12,7 +15,7 @@ Self-capacitive sensing is amazing - you actually don't need any external compon
 
 <img src="images/fruitcap-adafruit.jpg" alt="Drawing" width=300/>
 
-Until now, the PTC has been closed source and is undocumented, meaning you have to use Atmel's proprietary libraries[link], if you want to access the hardware on your Arduino-compatable processors. 
+Until now, the PTC has been closed source and is undocumented, meaning you have to use [Atmel's proprietary libraries](http://www.atmel.com/tools/QTOUCHLIBRARY.aspx), if you want to access the hardware on your Arduino-compatable processors. 
 
 ## Atmel PTC - great hardware you probably already have
 
@@ -22,7 +25,7 @@ The PTC peripheral is special - Atmel claims they have been a leader in capaciti
 
 ## The PTC downfall: a big binary blob called QTouch
 
-Unfortunately, you won't find access to the hardware PTC in the Arduino IDE which is the most commonly used gateway drug for the recreational hardware hacker. The painful reason[link] is that long-ago, Massimo from the Arduino foundation (and a fellow MIT-alum) didn't want anything that was closed-source infecting the Arduino ecosystem. Atmel only releases a closed-source software library to control the PTC called QTouch. You statically link this binary blob into your project to access the hardware.
+Unfortunately, you won't find access to the hardware PTC in the Arduino IDE which is the most commonly used gateway drug for the recreational hardware hacker. The [painful reason](https://code.google.com/archive/p/arduino/issues/199) is that long-ago, Massimo from the Arduino foundation (and a fellow MIT-alum) didn't want anything that was closed-source infecting the Arduino ecosystem. Atmel only releases a closed-source software library to control the PTC called QTouch. You statically link this binary blob into your project to access the hardware.
 
 The other major drawback of QTouch is code size. For simple needs, the Atmel QTouch library is over-engineered. For instance, on the ATSAMD11 MCU, which only sports 16KB of flash memory for your entire program, QTouch the library consumes nearly 8KB. This severely constrains your ability to do anything useful with your capacitive sense input. In my own case, I didn't care that QTouch was closed source -- I was motivated by the need for a smaller memory footprint. In my simple application, I couldn't even link my program code without dropping the bootloader and the USB stack. By comparison, LibrePTC operates in well under 1KB of code.
 
@@ -64,16 +67,15 @@ Please fork and contribute!
 
 [To be completed]
 
-
 # Key resources
 
-ATSAMD11 Data Sheet - You'll find a brief overview of the PTC on page XXX. But the data sheet is useful because it establishes the common patterns of peripheral busses, control registers and clocks that the PTC hardware uses.
+[ATSAMD11 Data Sheet](http://ww1.microchip.com/downloads/en/DeviceDoc/Atmel-42363-SAM-D11_Datasheet.pdf) - You'll find a brief overview of the PTC here but its quite short on details. The data sheet is useful because it establishes the common patterns of peripheral busses, control registers and clocks that the PTC hardware uses.
 
-ATSAMD21 Data sheet - Ditto the above
+[ATSAMD21 Data sheet](http://ww1.microchip.com/downloads/en/DeviceDoc/40001882A.pdf) - Ditto the above
 
-Atmel QTouch Library User Guide (8207L-AT42-05/12) - Older document describing QTouch for the AVRs but useful to understand the terminology
+[Atmel QTouch Library User Guide](http://www.atmel.com/images/doc8207.pdf) (8207L-AT42-05/12) - Older document describing QTouch for the AVRs but useful to understand the terminology
 
-QTouch atmel-42195-qtouch-library-peripheral-touch-controller_user-guide - The full user guide to the latest QTouch controller
+[QTouch atmel-42195-qtouch-library-peripheral-touch-controller_user-guide](http://ww1.microchip.com/downloads/en/DeviceDoc/atmel-42195-qtouch-library-peripheral-touch-controller_user-guide.pdf) - The full user guide to the latest QTouch controller
 
 # Library details
 
@@ -83,7 +85,7 @@ Capacitive touch sensing relies on the idea that your fingers affect electrical 
 
 When your finger approaches and gets near a capacitive sensing pad, it effectively alters the capacitance of the sensor pad because the "capacitor" is now a combination of the existing pad plus whatever your finger has.
 
-[AN0040png]
+<img src="images/AN0040-diagram.png" alt="Drawing" width=300/>
 
 Just to be super clear, when we talk about "capacitor", we aren't talking about a ceramic or electrolyic component you've added into your project as an external component. We are talking about the virtual capacitor formed by any electrical conductor.
 
@@ -97,7 +99,7 @@ In the case of touch measurement, the "capacitor" is charged by repeatedly raisi
 
 If you look at the design of the PTC from page 18 of the 42195 design guide, you see this basic structure.
 
-[42195-page18.png]
+[](images/42195-page18.png)
 
 In this chart, presumably the "input control" is the switch that either charges the capacitive sensing pad or routes the charge to the discharge resistor. Atmel doesn't show it explicitly but I think you can adjust the discharge resistor R(s) value, affecting the measurement. Atmel also has a compensation circuit that is basically a black box but seems to involve additional capacitors. There are hardware registers that I believe are involved in this compensation circuit.
 
@@ -115,7 +117,7 @@ Look in the PTC column on the far right and you can see if the GPIO pin can hand
 
 This chart is vital for setting up a project using either QTouch or LibrePTC libraries. To read a sensor, you must provide the library a "Y" channel to read. Be careful! Some pins may already  be in use for things like your clock or I2C. For instance, PA22 and PA23 on the D11 chips can be used as PTC lines Y12 and Y13. But those two pins are assigned by the ArduinoCore to SDA and SCL already and in fact are only one of the two possible pairs of pins that can be mapped to the I2C hardware.
 
-Another gotcha: Some Y lines don't map to physical pins on all variants. For instance Y10-Y13 on the SAMD21 architecture is not broken out on the "G" version of the chip, which is the most commonly-used variant (driving nearly all of the Arduino-compatable SAMD cores.) This quirk is why the D11 architecture actually has more capacitive sensing lines than its big brother D21-G.
+Another gotcha: Some Y lines don't map to physical pins on all variants. For instance Y10-Y13 on the SAMD21 architecture is not broken out on the "G" version of the chip, which is the most commonly-used variant (driving nearly all of the Arduino-Compatible SAMD cores.) This quirk is why the D11 architecture actually has more capacitive sensing lines than its big brother D21-G.
 
 Just remember the API to LibrePTC is expecting you to provide it the Y line you want to measure.
 
@@ -123,7 +125,7 @@ Just remember the API to LibrePTC is expecting you to provide it the Y line you 
 
 There are two different parts of the QTouch/PTC dance. The first is setting up the peripheral itself. The second is performing the read.
 
-## Clock Prerequeisites
+## Clock Prerequisites
 
 For the PTC to work, several things have to be in place. If you don't take these steps, you won't even see any data values in the registers and everything will silently fail. Clock configuration is apparently the bane of many ARM programmers so forgive me if I leave this a bit unexplained.
 
@@ -186,9 +188,7 @@ I don't have a definitive map of which registers need to be written while the pe
 
 # Setting up the PTC
 
-Once the PTC is initialized and ready, there 
-
-
+To be completed
 
 # Compensation
 
