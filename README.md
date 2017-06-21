@@ -6,13 +6,11 @@ LibrePTC is an Arduino-IDE compatible code library that provides first-ever open
 
 The basic idea, (taken from the AN0040 datasheet.)
 
-<img src="images/AN0040-diagram.png" alt="Drawing" width=200/>
-
-![What is this](images/AN0040-diagram.png)
+<img src="images/AN0040-diagram.png" alt="Drawing" width=300/>
 
 Self-capacitive sensing is amazing - you actually don't need any external components at all -- not even a resistor! In fact, the folks at Adafruit have even used such a thing to turn fruit into a user interface. Here is a screen shot from [@ladyada's wonderful Youtube explanation of touch sensing.](https://www.youtube.com/watch?v=Wk76UPRAVxI)
 
-![What is this](images/fruitcap-adafruit.jpg)
+<img src="images/fruitcap-adafruit.jpg" alt="Drawing" width=300/>
 
 Until now, the PTC has been closed source and is undocumented, meaning you have to use Atmel's proprietary libraries[link], if you want to access the hardware on your Arduino-compatable processors. 
 
