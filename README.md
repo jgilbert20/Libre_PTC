@@ -4,6 +4,8 @@ Ever wanted to add intuitive capacitive touch user interfaces to your hobby-grad
 
 LibrePTC is an Arduino-IDE compatible code library that provides first-ever open-source access to Atmel's latest-generation "Peripheral Touch Controller" (PTC). The PTC is a hardware-based capacitive sensor that can detect proximity of your fingers to special "pads" or areas of your circuit board. This lets you implement things like buttons, wheels and sliders without any actual moveable hardware or external components. 
 
+![What is this](images/AN0040-diagram.png)
+
 [picture]
 
 Self-capacitive sensing is amazing - you actually don't need any external components at all -- not even a resistor! In fact, the folks at Adafruit have even used such a thing to turn fruit into a user interface. 
