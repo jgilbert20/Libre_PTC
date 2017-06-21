@@ -6,7 +6,7 @@ LibrePTC is an Arduino-IDE compatible code library that provides first-ever open
 
 The basic idea, (taken from the AN0040 datasheet.)
 
-<img src="images/AN0040-diagram.png" alt="Drawing" style="width: 200px;"/>
+<img src="images/AN0040-diagram.png" alt="Drawing" width=200/>
 
 ![What is this](images/AN0040-diagram.png)
 
