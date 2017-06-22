@@ -1,6 +1,8 @@
 # LibrePTC
 
-**Current status**: It works on the SAMD11 architecture, but still cleaning things up to make it a "proper" API.
+**Current status**: For hacker/experimental use only. Not clean enough for regular use!
+
+It works on the SAMD11 architecture, but still cleaning things up to make it a "proper" API.
 
 # Introduction
 Ever wanted to add intuitive capacitive touch user interfaces to your hobby-grade Arduino project but frustrated by the lack of available libraries?  
